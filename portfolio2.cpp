@@ -131,27 +131,27 @@ else
         if(input == "a") newY--;
         if(input == "d") newY++;
 
-        // PLAYER WALKS INTO GUARD
+        //PLAYER WALKS INTO GUARD
         if(newX == guardX && newY == guardY)
         {
             cout << "YOU WERE CAUGHT!" << endl;
             return;
         }
 
-        // WIN
+        //WIN
         if(map[newX][newY] == '$')
         {
             cout << "YOU WIN LEVEL 1!" << endl;
             return;
         }
-   // MOVE PLAYER
+   //MOVE PLAYER
 if (map[newX][newY] != '#' &&
     (map[newX][newY] != 'D' || doorOpen))
 {
     playerX = newX;
     playerY = newY;
 
-    // Switch
+    //Switch
     if (map[playerX][playerY] == 'S')
     {
         if (!doorOpen)
@@ -167,7 +167,7 @@ else
     continue;
 }
 
-        // GUARD PATROL
+        //GUARD PATROL
 
         int nextX = guardX + guardDX;
         int nextY = guardY + guardDY;
@@ -322,7 +322,7 @@ string map[5] =
     int guardDX = 0;
     int guardDY = -1;
     char guardSymbol = '<';
-//~ DOOR FEATURE
+//DOOR FEATURE
     bool doorOpen = false;
 
     string input;
@@ -357,7 +357,7 @@ for (int i = 0; i < 5; i++)
         cout << "Move (WASD) or type'inspect': ";
         cin >> input;
 
-        // INSPECT FEATURE
+        //INSPECT FEATURE
         if (input == "inspect")
         {
             int row;
@@ -423,19 +423,19 @@ continue;
         if(input == "s") newX++;
         if(input == "a") newY--;
         if(input == "d") newY++;
-        // PLAYER WALKS INTO GUARD
+        //PLAYER WALKS INTO GUARD
         if(newX == guardX && newY == guardY)
         {
             cout << "YOU WERE CAUGHT!" << endl;
             return;
         }
-        // WIN
+        //WIN
         if(map[newX][newY] == '$')
         {
             cout << "YOU WIN LEVEL 2!" << endl;
             return;
         }
-        // MOVE PLAYER
+        //MOVE PLAYER
       if (map[newX][newY] != '#' && (map[newX][newY] != 'D' || doorOpen))
         {
         playerX = newX;
@@ -492,16 +492,16 @@ else
         }
         guardX += guardDX;
         guardY += guardDY;
-        // GUARD WALKS INTO PLAYER
+        //GUARD WALKS INTO PLAYER
         if(playerX == guardX && playerY == guardY)
         {
             cout << "YOU WERE CAUGHT!" << endl;
             return;
         }
-        // Guard vision
+        //Guard vision
 if (guardSymbol == '<')
 {
-    // Look left
+    //look left
     for (int y = guardY - 1; y >= 0; y--)
     {
         if (map[guardX][y] == '#' || (map[guardX][y] == 'D' && !doorOpen))
@@ -515,7 +515,7 @@ if (guardSymbol == '<')
 }
 else if (guardSymbol == '>')
 {
-    // Look right
+    //look right
     for (int y = guardY + 1; y < 8; y++)
     {
         if (map[guardX][y] == '#' || (map[guardX][y] == 'D' && !doorOpen))
@@ -531,7 +531,7 @@ else if (guardSymbol == '>')
 }
 else if (guardSymbol == '^')
 {
-    // Look up
+    //look up
     for (int x = guardX - 1; x >= 0; x--)
     {
         if (map[x][guardY] == '#' ||
@@ -548,7 +548,7 @@ else if (guardSymbol == '^')
 }
 else if (guardSymbol == 'V')    
     {
-    // Look down
+    //look down
     for (int x = guardX + 1; x < 5; x++)
     {
         if (map[x][guardY] == '#' ||
@@ -569,7 +569,7 @@ else if (guardSymbol == 'V')
 // LEVEL 3: Revenge of the General, DIFFERENT MAP!
 void loadLevel3() 
 {
-    cout << "Level 3 loaded" << endl;
+    cout << "   Level 3 loaded  " << endl;
     cout << "----- Directions -----" << endl;
     cout << "Reach the $ without being seen by the guard." << endl;
     cout << "Type 'inspect' to check what is on a tile." << endl;
@@ -580,7 +580,7 @@ void loadLevel3()
     string map[5] =
     {
         "########",
-        "#   #  #",
+        "#   D  #",
         "# ## # #",
         "#S   D$#",
         "########"
@@ -786,7 +786,6 @@ void loadLevel3()
             cout << "YOU WERE CAUGHT!" << endl;
             return;
         }
-
         // GUARD VISION
         if (guardSymbol == '<')
         {
