@@ -4,13 +4,15 @@
 #include <cctype>
 using namespace std;
 
-// LEVEL 1 : A New Enemy, Basic Beginner level
+// LEVEL 1 : A New Enemy, Basic Beginner level (One door & one switch)
+//standard flip
 void loadLevel1() 
 {
     //HOW TO...
-    cout << "   Level 1 loaded     " << endl;
-    cout << "----- Directions -----" << endl;
-    cout << "Reach the $ without being seen by the guard." << endl;
+    cout << "   Level 1 loaded - Beginner Level    " << endl;
+    cout << "   -----  Directions  -----    " << endl;
+    cout << "Welcome to your first mission!" << endl;
+    cout << "Reach the $ without being seen by the guard by using WASD." << endl;
     cout << "Type 'inspect' to check what is on a tile." << endl;
     cout << "Inspecting does not use your turn." << endl;
     cout << "Walk onto switches (S) to open doors (D)." << endl;
@@ -22,7 +24,7 @@ void loadLevel1()
     "########",
     "#      #",
     "#  #   #",
-    "#  S D$#",
+    "# S  D$#",
     "########"
     };
     int playerX = 1;
@@ -158,7 +160,7 @@ if (map[newX][newY] != '#' &&
         if (!doorOpen)
         {
             doorOpen = true;
-            cout << "Door opened!" << endl;
+            cout << "Door toggled!" << endl;
         }
     }
 }
@@ -292,18 +294,17 @@ else if (guardSymbol == 'V')
 
 }
 
-// LEVEL 2: The Truth of the Weapon, DIFFERENT MAP!
+// LEVEL 2: The Truth of the Weapon, DIFFERENT MAP! (Multiple Doors)
 void loadLevel2() 
 {
     //map loaded
-    cout << "   Level 2 loaded  " << endl;
-    cout << "----- Directions -----" << endl;
+    cout << "   Level 2 loaded - Simple Level  " << endl;
+    cout << "   -----   Directions  -----   " << endl;
+    cout << "This mission has multiple doors. One switch controls multiple Doors." << endl;
     cout << "Reach the $ without being seen by the guard." << endl;
-    cout << "Type 'inspect' to check what is on a tile." << endl;
-    cout << "Inspecting does not use your turn." << endl;
+    cout << "Inspect tiles if you need more information." << endl;
     cout << "Walk onto switches (S) to open doors (D)." << endl;
     cout << "----------------------------------------------" << endl;
-
 string map[5] =
 {
     "########",
@@ -445,7 +446,7 @@ continue;
     if (!doorOpen)
     {
         doorOpen = true;
-        cout << "Door opened!" << endl;
+        cout << "Door toggled!" << endl;
         }
     }
 }
@@ -454,43 +455,55 @@ else
     cout << "You hit a wall or a closed door!" << endl;
     continue;
 }
-        // GUARD PATROL
-        int nextX = guardX + guardDX;
-        int nextY = guardY + guardDY;
-        // Hit wall = turn clockwise
-        if(map[nextX][nextY] == '#' || (map[nextX][nextY] == 'D' && !doorOpen))
-        {
-            // Left -> Up
-            if(guardDX == 0 && guardDY == -1)
-            {
-                guardDX = -1;
-                guardDY = 0;
-                guardSymbol = '^';
-            }
-            // Up -> Right
-            else if(guardDX == -1 && guardDY == 0)
-            {
-                guardDX = 0;
-                guardDY = 1;
-                guardSymbol = '>';
-            }
-            // Right -> Down
-            else if(guardDX == 0 && guardDY == 1)
-            {
-                guardDX = 1;
-                guardDY = 0;
-                guardSymbol = 'V';
-            }
-            // Down -> Left
-            else
-            {
-                guardDX = 0;
-                guardDY = -1;
-                guardSymbol = '<';
-            }
-        }
-        guardX += guardDX;
-        guardY += guardDY;
+// Checking Out of Bounds
+int nextX = guardX + guardDX;
+int nextY = guardY + guardDY;
+
+bool outOfBounds =
+    (nextX < 0 || nextX >= 5 ||
+     nextY < 0 || nextY >= 8);
+
+// Hit wall, closed door, or edge = turn clockwise
+// Hit wall, closed door, or edge = turn clockwise
+if (outOfBounds ||
+    map[nextX][nextY] == '#' ||
+    (map[nextX][nextY] == 'D' && !doorOpen))
+{
+    // Left -> Up
+    if (guardDX == 0 && guardDY == -1)
+    {
+        guardDX = -1;
+        guardDY = 0;
+        guardSymbol = '^';
+    }
+    // Up -> Right
+    else if (guardDX == -1 && guardDY == 0)
+    {
+        guardDX = 0;
+        guardDY = 1;
+        guardSymbol = '>';
+    }
+    // Right -> Down
+    else if (guardDX == 0 && guardDY == 1)
+    {
+        guardDX = 1;
+        guardDY = 0;
+        guardSymbol = 'V';
+    }
+    // Down -> Left
+    else
+    {
+        guardDX = 0;
+        guardDY = -1;
+        guardSymbol = '<';
+    }
+}
+else
+{
+    guardX = nextX;
+    guardY = nextY;
+}
+
         //GUARD WALKS INTO PLAYER
         if(playerX == guardX && playerY == guardY)
         {
@@ -565,25 +578,25 @@ else if (guardSymbol == 'V')
     }
 }
 
-// LEVEL 3: Revenge of the General, DIFFERENT MAP!
+// LEVEL 3: Revenge of the General, DIFFERENT MAP! (Guard walks over switch & multiple doors/switch)
 void loadLevel3() 
 {
-    cout << "   Level 3 loaded  " << endl;
-    cout << "----- Directions -----" << endl;
-    cout << "Reach the $ without being seen by the guard." << endl;
-    cout << "Type 'inspect' to check what is on a tile." << endl;
-    cout << "Inspecting does not use your turn." << endl;
-    cout << "Walk onto switches (S) to open doors (D)." << endl;
+    cout << "   Level 3 loaded - Medium Level  " << endl;
+    cout << "   -----  Directions  -----    " << endl;
+    cout << "Watch the guard carefully!" << endl;
+    cout << "Guards can activate switches just like you." << endl;
+    cout << "Doors may open or close during the mission." << endl;
+    cout << "Plan your route and reach '$' safely." << endl;
     cout << "----------------------------------------------" << endl;
 
     string map[5] =
-    {
-        "########",
-        "#   D  #",
-        "# ## # #",
-        "#S   D$#",
-        "########"
-    };
+{
+    "########",
+    "#   D S#",
+    "# ## # #",
+    "#    D$#",
+    "########"
+};
 
     // Variables for guard and player
     int playerX = 1;
@@ -652,7 +665,7 @@ void loadLevel3()
             
             if (row == guardX && col == guardY)
             {
-                cout << "Guard facing " << guardSymbol << endl;
+                cout << "Guard facing " << guardSymbol << ". Turns clockwise when hits obstacle" << endl;
             }
             else if (map[row][col] == '#')
             {
@@ -671,7 +684,7 @@ void loadLevel3()
             }
             else if (map[row][col] == 'S')
             {
-                cout << "Switch." << endl;
+                cout << "Switch controlling door group 1." << endl;
             }
             else if (map[row][col] == '$')
             {
@@ -718,13 +731,10 @@ void loadLevel3()
             playerX = newX;
             playerY = newY;
 
-            if (map[playerX][playerY] == 'S')
-            {
-                if (!doorOpen)
-                {
-                    doorOpen = true;
-                    cout << "Door opened!" << endl;
-                }
+    if (map[playerX][playerY] == 'S')
+    {
+        doorOpen = !doorOpen;
+        cout << "You stepped on the switch! Door toggled!" << endl;
             }
         }
         else
@@ -778,7 +788,12 @@ void loadLevel3()
             guardX = nextX;
             guardY = nextY;
         }
-
+    // Guard activates the switch
+    if (map[guardX][guardY] == 'S')
+    {
+    doorOpen = !doorOpen;
+    cout << "Guard stepped on the switch! Door toggled!" << endl;
+}
         // GUARD WALKS INTO PLAYER
         if (playerX == guardX && playerY == guardY)
         {
@@ -844,14 +859,16 @@ void loadLevel3()
         }   
     }
 }
-//LEVEL 4: Guard Colored Doors, Different requirement
+//LEVEL 4: Guard Colored Doors, Different requirement (Complex one)
+//This level has multi-color doors
 void loadLevel4(){
-    cout << "   Level 4 loaded     " << endl;
-    cout << "----- Directions -----" << endl;
-    cout << "Reach the $ without being seen by the guard." << endl;
-    cout << "Type 'inspect' to check what is on a tile." << endl;
-    cout << "Inspecting does not use your turn." << endl;
-    cout << "Walk onto switches (r, b) to open doors (R, B)." << endl;
+    cout << "   Level 4 loaded - Hard    " << endl;
+    cout << "   -----   Directions  -----   " << endl;
+    cout << "This Mission features multiple switch groups." << endl;
+    cout << "Red switches (r) control Red doors (R)." << endl;
+    cout << "Blue Switches (b) control Blue doors (B)." << endl;
+    cout << "Guards can also activate colored switches." << endl;
+    cout << "Think ahead, avoid detection, and reach the '$'." << endl;
     cout << "----------------------------------------------" << endl;
 
     string map[5] = {
@@ -944,7 +961,6 @@ void loadLevel4(){
             }
             continue; // Turn is not used
         }
-
         // MOVEMENT PROCESSING
         int newX = playerX;
         int newY = playerY;
@@ -953,24 +969,20 @@ void loadLevel4(){
             cout << "Invalid input.\n";
             continue;
         }
-
         if(input == "w") newX--;
         if(input == "s") newX++;
         if(input == "a") newY--;
         if(input == "d") newY++;
-
         // PLAYER WALKS INTO GUARD
         if(newX == guardX && newY == guardY) {
             cout << "YOU WERE CAUGHT!" << endl;
             return;
         }
-
         // WIN CONDITION
         if(map[newX][newY] == '$') {
             cout << "YOU WIN LEVEL 4!" << endl;
             return;
         }
-
         // CHECK WALLS AND CLOSED DOORS FOR PLAYER
         bool isRedDoorClosed = (map[newX][newY] == 'R' && !redDoorOpen);
         bool isBlueDoorClosed = (map[newX][newY] == 'B' && !blueDoorOpen);
@@ -1068,7 +1080,6 @@ void loadLevel4(){
         }  
     }
 }
-
 
 //Main menu with user input & loading the levels, play again added!
 int main()
