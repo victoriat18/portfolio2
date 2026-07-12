@@ -4,7 +4,7 @@
 #include <cctype>
 using namespace std;
 
-// LEVEL 1 : A New Enemy, Basic Beginner level!
+// LEVEL 1 : A New Enemy, Basic Beginner level
 void loadLevel1() 
 {
     //HOW TO...
@@ -37,6 +37,7 @@ void loadLevel1()
     char guardSymbol = '<';
 //~ DOOR FEATURE
     bool doorOpen = false;
+    //bool door2Open = false;
 
     string input;
     while (true)
@@ -200,7 +201,6 @@ else
                 guardDY = 0;
                 guardSymbol = 'V';
             }
-
             // Down -> Left
             else
             {
@@ -209,7 +209,6 @@ else
                 guardSymbol = '<';
             }
         }
-
         guardX += guardDX;
         guardY += guardDY;
 
@@ -845,6 +844,232 @@ void loadLevel3()
         }   
     }
 }
+//LEVEL 4: Guard Colored Doors, Different requirement
+void loadLevel4(){
+    cout << "   Level 4 loaded     " << endl;
+    cout << "----- Directions -----" << endl;
+    cout << "Reach the $ without being seen by the guard." << endl;
+    cout << "Type 'inspect' to check what is on a tile." << endl;
+    cout << "Inspecting does not use your turn." << endl;
+    cout << "Walk onto switches (r, b) to open doors (R, B)." << endl;
+    cout << "----------------------------------------------" << endl;
+
+    string map[5] = {
+        "########",
+        "# r R  #",
+        "#   #  #",
+        "# b B$ #",
+        "########"
+    };
+    
+    int playerX = 1;
+    int playerY = 1;
+    
+    // Guard starts here
+    int guardX = 2;
+    int guardY = 6;
+    // Guard moving left initially
+    int guardDX = 0;
+    int guardDY = -1;
+    char guardSymbol = '<';
+
+    //DOOR FEATURE, COLORS IMPLIMENTED
+    bool redDoorOpen = false;
+    bool blueDoorOpen = false;
+
+    string input;
+    while (true)
+    {
+        // PRINT MAP
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (i == playerX && j == playerY) {
+                    cout << '@';
+                }
+                else if (i == guardX && j == guardY) {
+                    cout << guardSymbol;
+                }
+                else if (map[i][j] == 'R' && redDoorOpen) {
+                    cout << ' ';
+                }
+                else if (map[i][j] == 'B' && blueDoorOpen) {
+                    cout << ' ';
+                }
+                else {
+                    cout << map[i][j];
+                }
+            }
+            cout << endl;
+        }
+
+        cout << "Move (WASD) or type 'inspect': ";
+        cin >> input;
+
+        // INSPECT FEATURE
+        if (input == "inspect") {
+            int row, col;
+            cout << "Enter row: ";
+            cin >> row;
+            cout << "Enter column: ";
+            cin >> col;
+
+            if(row < 0 || row >= 5 || col < 0 || col >= 8) {
+                cout << "Invalid location.\n";
+                continue;
+            }
+
+            if(row == guardX && col == guardY) {
+                cout << "Guard facing " << guardSymbol << " (Patrols Clockwise)." << endl;
+            }
+            else if(map[row][col] == '#') {
+                cout << "Wall." << endl;
+            }
+            else if(map[row][col] == 'R') {
+                cout << "Red Door (" << (redDoorOpen ? "Open" : "Closed") << ")." << endl;
+            }
+            else if(map[row][col] == 'B') {
+                cout << "Blue Door (" << (blueDoorOpen ? "Open" : "Closed") << ")." << endl;
+            }
+            else if(map[row][col] == 'r') {
+                cout << "Red Switch." << endl;
+            }
+            else if(map[row][col] == 'b') {
+                cout << "Blue Switch." << endl;
+            }
+            else if(map[row][col] == '$') {
+                cout << "Goal." << endl;
+            }
+            else {
+                cout << "Empty tile." << endl;
+            }
+            continue; // Turn is not used
+        }
+
+        // MOVEMENT PROCESSING
+        int newX = playerX;
+        int newY = playerY;
+
+        if(input != "w" && input != "a" && input != "s" && input != "d") {
+            cout << "Invalid input.\n";
+            continue;
+        }
+
+        if(input == "w") newX--;
+        if(input == "s") newX++;
+        if(input == "a") newY--;
+        if(input == "d") newY++;
+
+        // PLAYER WALKS INTO GUARD
+        if(newX == guardX && newY == guardY) {
+            cout << "YOU WERE CAUGHT!" << endl;
+            return;
+        }
+
+        // WIN CONDITION
+        if(map[newX][newY] == '$') {
+            cout << "YOU WIN LEVEL 4!" << endl;
+            return;
+        }
+
+        // CHECK WALLS AND CLOSED DOORS FOR PLAYER
+        bool isRedDoorClosed = (map[newX][newY] == 'R' && !redDoorOpen);
+        bool isBlueDoorClosed = (map[newX][newY] == 'B' && !blueDoorOpen);
+
+        if (map[newX][newY] != '#' && !isRedDoorClosed && !isBlueDoorClosed) {
+            playerX = newX;
+            playerY = newY;
+
+            // Player Toggles Switches
+            if (map[playerX][playerY] == 'r') {
+                redDoorOpen = !redDoorOpen;
+                cout << "Red door toggled!\n";
+            }
+            if (map[playerX][playerY] == 'b') {
+                blueDoorOpen = !blueDoorOpen;
+                cout << "Blue door toggled!\n";
+            }
+        }
+        else {
+            cout << "You hit a wall or a closed door." << endl;
+            continue;
+        }
+
+        // GUARD PATROL LOGIC
+        int nextX = guardX + guardDX;
+        int nextY = guardY + guardDY;
+        
+        bool guardHitRedDoor = (map[nextX][nextY] == 'R' && !redDoorOpen);
+        bool guardHitBlueDoor = (map[nextX][nextY] == 'B' && !blueDoorOpen);
+
+        // Hit wall or closed door = turn clockwise
+        if(map[nextX][nextY] == '#' || guardHitRedDoor || guardHitBlueDoor) {
+            // Left -> Up
+            if(guardDX == 0 && guardDY == -1) {
+                guardDX = -1; guardDY = 0; guardSymbol = '^';
+            }
+            // Up -> Right
+            else if(guardDX == -1 && guardDY == 0) {
+                guardDX = 0; guardDY = 1; guardSymbol = '>';
+            }
+            // Right -> Down
+            else if(guardDX == 0 && guardDY == 1) {
+                guardDX = 1; guardDY = 0; guardSymbol = 'V';
+            }
+            // Down -> Left
+            else {
+                guardDX = 0; guardDY = -1; guardSymbol = '<';
+            }
+        }
+
+        // Move guard forward after potentially turning
+        guardX += guardDX;
+        guardY += guardDY;
+
+        // Guard Toggles Switches if they step on them
+        if (map[guardX][guardY] == 'r') {
+            redDoorOpen = !redDoorOpen;
+            cout << "Guard stepped on Red Switch! Red door toggled!\n";
+        }
+        if (map[guardX][guardY] == 'b') {
+            blueDoorOpen = !blueDoorOpen;
+            cout << "Guard stepped on Blue Switch! Blue door toggled!\n";
+        }
+
+        // GUARD WALKS INTO PLAYER
+        if(playerX == guardX && playerY == guardY) {
+            cout << "YOU WERE CAUGHT!" << endl;
+            return;
+        }
+
+        // GUARD VISION SYSTEM
+        if (guardSymbol == '<') {
+            for (int y = guardY - 1; y >= 0; y--) {
+                if (map[guardX][y] == '#' || (map[guardX][y] == 'R' && !redDoorOpen) || (map[guardX][y] == 'B' && !blueDoorOpen)) break;
+                if (guardX == playerX && y == playerY) { cout << "YOU WERE CAUGHT!" << endl; return; }
+            }
+        }
+        else if (guardSymbol == '>') {
+            for (int y = guardY + 1; y < 8; y++) {
+                if (map[guardX][y] == '#' || (map[guardX][y] == 'R' && !redDoorOpen) || (map[guardX][y] == 'B' && !blueDoorOpen)) break;
+                if (guardX == playerX && y == playerY) { cout << "YOU WERE CAUGHT!" << endl; return; }
+            }
+        }
+        else if (guardSymbol == '^') {
+            for (int x = guardX - 1; x >= 0; x--) {
+                if (map[x][guardY] == '#' || (map[x][guardY] == 'R' && !redDoorOpen) || (map[x][guardY] == 'B' && !blueDoorOpen)) break;
+                if (x == playerX && guardY == playerY) { cout << "YOU WERE CAUGHT!" << endl; return; }
+            }
+        }
+        else if (guardSymbol == 'V') {
+            for (int x = guardX + 1; x < 5; x++) {
+                if (map[x][guardY] == '#' || (map[x][guardY] == 'R' && !redDoorOpen) || (map[x][guardY] == 'B' && !blueDoorOpen)) break;
+                if (x == playerX && guardY == playerY) { cout << "YOU WERE CAUGHT!" << endl; return; }
+            }
+        }  
+    }
+}
+
+
 //Main menu with user input & loading the levels, play again added!
 int main()
 {
@@ -860,6 +1085,7 @@ while (playAgain == 'y' || playAgain == 'Y')
     cout << "1) A New Enemy" << endl;
     cout << "2) The Truth of the Weapon" << endl;
     cout << "3) Revenge of the General" << endl;  
+    cout << "4) Guard Color Doors" << endl;
 
 
 getline(cin, choice);
@@ -882,6 +1108,9 @@ else if (choice == "2" || choice == "The Truth of the Weapon" || choice == "the 
 else if (choice == "3" || choice == "revenge of the general" || choice == "Revenge of the General")
 {
     loadLevel3(); //function level 3
+}
+else if(choice == "4" || choice == "guard color doors" || choice == "Guard Color Doors" ){
+    loadLevel4();
 }
 else 
 {
