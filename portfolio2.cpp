@@ -18,8 +18,6 @@ void loadLevel1()
     cout << "Stationary guards only watch where they're facing." << endl;
     cout << "----------------------------------------------" << endl;
 
-
-
     string map[5] =
     {
     "########",
