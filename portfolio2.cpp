@@ -11,12 +11,14 @@ void loadLevel1()
     //HOW TO...
     cout << "   Level 1 loaded - Beginner Level    " << endl;
     cout << "   -----  Directions  -----    " << endl;
-    cout << "Welcome to your first mission!" << endl;
-    cout << "Reach the $ without being seen by the guard by using WASD." << endl;
-    cout << "Type 'inspect' to check what is on a tile." << endl;
-    cout << "Inspecting does not use your turn." << endl;
+    cout << "Reach the $ without being seen, Move using WASD." << endl;
+    cout << "Type 'inspect' to check what is on a tile (doesn't use a turn)." << endl;
     cout << "Walk onto switches (S) to toggle doors (D)." << endl;
+    cout << "Watch out for both patrolling and stationary guards." << endl;
+    cout << "Stationary guards only watch where they're facing." << endl;
     cout << "----------------------------------------------" << endl;
+
+
 
     string map[5] =
     {
@@ -35,9 +37,9 @@ void loadLevel1()
     int guardDX = 0;
     int guardDY = -1;
     //STILL GUARD (stays still)
-    int stillGuardX = 1;
+    int stillGuardX = 2;
     int stillGuardY = 5;
-    char stillGuardSymbol = '<';
+    char stillGuardSymbol = '>';
 
     char guardSymbol = '<';
 //~ DOOR FEATURE
@@ -183,7 +185,7 @@ else
     int nextY = guardY + guardDY;
     bool outOfBounds = (nextX < 0 || nextX >= 5 || nextY < 0 || nextY >= 8);
 
-if (outOfBounds || map[nextX][nextY] == '#' || (map[nextX][nextY] == 'D' && !doorOpen))
+if (outOfBounds || map[nextX][nextY] == '#' || (map[nextX][nextY] == 'D' && !doorOpen) ||(nextX == stillGuardX && nextY == stillGuardY))
 {
     // Left -> Up
     if (guardDX == 0 && guardDY == -1)
@@ -238,7 +240,8 @@ if (guardSymbol == '<')
     // Look left
     for (int y = guardY - 1; y >= 0; y--)
     {
-        if (map[guardX][y] == '#' || (map[guardX][y] == 'D' && !doorOpen))
+        if (map[guardX][y] == '#' ||
+            (map[guardX][y] == 'D' && !doorOpen))
             break;
 
         if (guardX == playerX && y == playerY)
@@ -253,12 +256,10 @@ else if (guardSymbol == '>')
     // Look right
     for (int y = guardY + 1; y < 8; y++)
     {
-        if (map[guardX][y] == '#' || (map[guardX][y] == 'D' && !doorOpen))
-        {
+        if (map[guardX][y] == '#' ||
+            (map[guardX][y] == 'D' && !doorOpen))
+            break;
 
-        break;     
-        }
-        
         if (guardX == playerX && y == playerY)
         {
             cout << "YOU WERE CAUGHT!" << endl;
@@ -273,9 +274,7 @@ else if (guardSymbol == '^')
     {
         if (map[x][guardY] == '#' ||
             (map[x][guardY] == 'D' && !doorOpen))
-        {
             break;
-        }
 
         if (x == playerX && guardY == playerY)
         {
@@ -286,8 +285,22 @@ else if (guardSymbol == '^')
 }
 else if (guardSymbol == 'V')
 {
-    //stationary guard vision
-for (int y = stillGuardY - 1; y >= 0; y--)
+    // Look down
+    for (int x = guardX + 1; x < 5; x++)
+    {
+        if (map[x][guardY] == '#' ||
+            (map[x][guardY] == 'D' && !doorOpen))
+            break;
+
+        if (x == playerX && guardY == playerY)
+        {
+            cout << "YOU WERE CAUGHT!" << endl;
+            return;
+        }
+    }
+}
+// STATIONARY GUARD VISION (faces right)
+for (int y = stillGuardY + 1; y < 8; y++)
 {
     if (map[stillGuardX][y] == '#' ||
         (map[stillGuardX][y] == 'D' && !doorOpen))
@@ -299,11 +312,10 @@ for (int y = stillGuardY - 1; y >= 0; y--)
     {
         cout << "YOU WERE CAUGHT!" << endl;
         return;
-            }
-        }
+    }
+}
     } 
 }
-    }
 
 // LEVEL 2: The Truth of the Weapon, DIFFERENT MAP! (Multiple Doors)
 void loadLevel2() 
