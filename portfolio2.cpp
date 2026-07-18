@@ -15,7 +15,7 @@ void loadLevel1()
     cout << "Type 'inspect' to check what is on a tile (doesn't use a turn)." << endl;
     cout << "Walk onto switches (S) to toggle doors (D)." << endl;
     cout << "Watch out for both patrolling and stationary guards." << endl;
-    cout << "Stationary guards only watch where they're facing." << endl;
+    cout << "Guards only watch where they're facing." << endl;
     cout << "----------------------------------------------" << endl;
 
     string map[5] =
@@ -1243,7 +1243,7 @@ string map[7] =
             return;
         }
 
-        // WIN
+        // WIN MESSAGE
         if (map[newX][newY] == '$')
         {
             cout << "YOU WIN LEVEL 5!" << endl;
@@ -1272,7 +1272,7 @@ string map[7] =
         int nextX = guardX + guardDX;
         int nextY = guardY + guardDY;
 
-        // Check if next step would leave map bounds (Updated to 7x10 boundaries)
+        // Check if next step would leave map bounds,
         bool outOfBounds = (nextX < 0 || nextX >= 7 || nextY < 0 || nextY >= 10);
 
         // Hit wall, closed door, or out-of-bounds = turn clockwise
@@ -1285,21 +1285,21 @@ string map[7] =
                 guardDY = 0;
                 guardSymbol = '^';
             }
-            // Up -> Right
+            // Up , Right
             else if (guardDX == -1 && guardDY == 0)
             {
                 guardDX = 0;
                 guardDY = 1;
                 guardSymbol = '>';
             }
-            // Right -> Down
+            // Right , Down
             else if (guardDX == 0 && guardDY == 1)
             {
                 guardDX = 1;
                 guardDY = 0;
                 guardSymbol = 'V';
             }
-            // Down -> Left
+            // Down , Left
             else
             {
                 guardDX = 0;
